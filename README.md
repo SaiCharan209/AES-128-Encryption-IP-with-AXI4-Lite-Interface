@@ -22,6 +22,13 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 
 ---
 ## Architecture Overview
-![AES_IP]
+![AES_IP](Block_diagram.png)
+
+---
+## State Machine Overview
+
+### Read FSM
+
+
 
 
