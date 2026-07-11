@@ -35,7 +35,7 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 | `READ` | reads 4 32 bit data and packs it into 128 bit plain text through channel overlap. |
 | `WAIT` | if !AES_ready it waits for the pipeline, it is for backpressure handling |
 
-![Read State Machine](read.png)
+![Read State Machine](Read_FSM.png)
 
 
 
