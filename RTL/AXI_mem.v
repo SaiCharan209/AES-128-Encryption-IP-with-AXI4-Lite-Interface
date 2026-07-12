@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module axi_bmem #(
+module axi_mem #(
     parameter AXI_DATA_WIDTH = 32,
     parameter AXI_ADDR_WIDTH = 32,
     parameter MEM_SIZE = 8192
