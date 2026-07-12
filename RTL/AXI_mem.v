@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module axi_bram #(
+module axi_bmem #(
     parameter AXI_DATA_WIDTH = 32,
     parameter AXI_ADDR_WIDTH = 32,
     parameter MEM_SIZE = 8192
@@ -36,7 +36,7 @@ module axi_bram #(
     localparam OKAY   = 2'b00;
     localparam SLVERR = 2'b10;
 
-    reg [AXI_DATA_WIDTH-1:0] ram [0:(MEM_SIZE/4)-1];
+    reg [AXI_DATA_WIDTH-1:0] mem [0:(MEM_SIZE/4)-1];
 
     integer i;
 
@@ -63,7 +63,7 @@ module axi_bram #(
                     s_axi_bresp <= OKAY;
                     for (i = 0; i < 4; i = i+1) begin
                         if (s_axi_wstrb[i])
-                            ram[s_axi_awaddr[AXI_ADDR_WIDTH-1:2]][(i*8)+:8] <= s_axi_wdata[(i*8)+:8];
+                            mem[s_axi_awaddr[AXI_ADDR_WIDTH-1:2]][(i*8)+:8] <= s_axi_wdata[(i*8)+:8];
                     end
                 end else begin
                     s_axi_bresp <= SLVERR;
@@ -77,7 +77,7 @@ module axi_bram #(
                         s_axi_bresp <= OKAY;
                         for (i = 0; i < 4; i = i+1) begin
                             if (w_strb_q[i])
-                                ram[s_axi_awaddr[AXI_ADDR_WIDTH-1:2]][(i*8)+:8] <= w_data_q[(i*8)+:8];
+                                mem[s_axi_awaddr[AXI_ADDR_WIDTH-1:2]][(i*8)+:8] <= w_data_q[(i*8)+:8];
                         end
                     end else begin
                         s_axi_bresp <= SLVERR;
@@ -95,7 +95,7 @@ module axi_bram #(
                         s_axi_bresp <= OKAY;
                         for (i = 0; i < 4; i = i+1) begin
                             if (s_axi_wstrb[i])
-                                ram[aw_addr_q[AXI_ADDR_WIDTH-1:2]][(i*8)+:8] <= s_axi_wdata[(i*8)+:8];
+                                mem[aw_addr_q[AXI_ADDR_WIDTH-1:2]][(i*8)+:8] <= s_axi_wdata[(i*8)+:8];
                         end
                     end else begin
                         s_axi_bresp <= SLVERR;
@@ -124,8 +124,8 @@ module axi_bram #(
         end else begin
             if (s_axi_arready && s_axi_arvalid) begin
                 s_axi_rvalid <= 1'b1;
-                if (s_axi_araddr < MEM_SIZE) begin
-                    s_axi_rdata <= ram[s_axi_araddr[AXI_ADDR_WIDTH-1:2]];
+                if (s_axi_araddr < MEM_SIZE-3) begin
+                    s_axi_rdata <= mem[s_axi_araddr[AXI_ADDR_WIDTH-1:2]];
                     s_axi_rresp <= OKAY;
                 end else begin
                     s_axi_rdata <= 32'hDEADBEEF;
