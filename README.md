@@ -1,5 +1,5 @@
 # AES-128-Encryption-IP-with-AXI4-Lite-Interface
-Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing with memory and CPU
+Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing with memory and CPU ,it fetches the plain text and writes the encrypted cipher text back to the slave memory without any CPU intervention and stalls.
 
 ---
 
@@ -36,6 +36,24 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 | `WAIT` | if !AES_ready it waits for the pipeline, it is for backpressure handling |
 
 ![Read State Machine](Read_FSM.png)
+
+### Write FSM
+
+| State       | Description |
+|-------------|-------------|
+| `IDLE` | Waits for aes_done |
+| `WRITE` | writes the 128 bit cipher in 4 32 bit stream using channel overlap. |
+| `WAIT` | if the next cipher text isn't ready it waits for the pipeline, it is for backpressure handling |
+
+![Write State Machine](write_FSM.png)
+
+---
+
+## Memory Mapped I/O architecture
+
+We are using memory mapped I/O to communicate with the IP using a unique address to communicate with the IP which is accessed by CPU on a shared bus conveniently.
+
+
 
 
 
