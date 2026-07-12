@@ -68,9 +68,6 @@ module sys_top #(
     wire                              m_axi_rvalid,  m_axi_rready;
 
 
-    wire aes_busy_wire;
-
-
     wire [C_M_AXI_ADDR_WIDTH-1:0]     bram_awaddr;
     wire                              bram_awvalid, bram_awready;
     wire [C_M_AXI_DATA_WIDTH-1:0]     bram_wdata;
