@@ -53,6 +53,11 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 
 We are using memory mapped I/O to communicate with the IP using a unique address to communicate with the IP which is accessed by CPU on a shared bus conveniently.
 
+## Testing
+
+Successfully verified the pipeline by Stress testing the AES Pipeline with 500 AES vectors with dynamic key updates through test bench by AXI-4 Lite
+
+
 
 
 
