@@ -25,6 +25,9 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 ![AES_IP](Block_diagram.png)
 
 ---
+## AES-128 Pipeline
+Designed a 11-stage AES-128 Electronic code book (ECB) mode of operation pipeline. the theorotical throughput that pipeline can produce is 1 cipher text/clock cycle after the pipeline is filled completely. the pipeline supports dynamic key updates using on the fly key expansion, and implemented pipeline registers for passing the address and the round texts through the pipeline. in the pipeline the plain text is taken from the read FSM and after the encryption it is written back to the memory using the write FSM.
+
 ## State Machine Overview
 
 ### Read FSM
@@ -51,12 +54,12 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 
 ## Memory Mapped I/O architecture
 
-We are using memory mapped I/O to communicate with the IP using a unique address to communicate with the IP which is accessed by CPU on a shared bus conveniently.
+We are using memory mapped I/O to communicate with the IP using a unique address to communicate with the IP which is accessed by CPU on a shared bus conveniently. Here the status and the control registers are accessed by the CPU using the AXI Lite address mapped bus architecture, the control register is only written and the status registers are only read, so instead of giving separate AXI 5 channels to each of the registers, i have give only write AXI-lite channel to the control register, and only gave read AXI-lite channel to the status registers.
 
 ## Testing
 
 Successfully verified the pipeline by Stress testing the AES Pipeline with 500 AES vectors with dynamic key updates through test bench by AXI-4 Lite
-
+and achieved a theorotical throughput of 12.8 gbps (excluding the AXI communication stalls) at 100 Mhz clock frequency. The max frequency the design can run without any timing errors is 400 Mhz.
 
 
 
