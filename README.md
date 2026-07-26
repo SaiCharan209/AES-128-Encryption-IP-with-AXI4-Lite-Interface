@@ -28,6 +28,21 @@ Implemented a AES-128 10 stage pipelined IP AXI-4 Lite interface for interfacing
 ## AES-128 Pipeline
 Designed a 11-stage AES-128 Electronic code book (ECB) mode of operation pipeline. the theorotical throughput that pipeline can produce is 1 cipher text/clock cycle after the pipeline is filled completely. the pipeline supports dynamic key updates using on the fly key expansion, and implemented pipeline registers for passing the address and the round texts through the pipeline. in the pipeline the plain text is taken from the read FSM and after the encryption it is written back to the memory using the write FSM.
 
+The data path consists of the following hardware transformations:
+
+*   **Initial Stage (Round 0):** 
+    *   **AddRoundKey:** The initial 128-bit plaintext is XORed with the original master key before entering the main pipeline.
+*   **Standard Pipeline Stages (Rounds 1–9):** 
+    *   **SubBytes:** A non-linear substitution step utilizing a highly optimized hardware S-Box (implemented as a lookup table/ROM) to replace each byte.
+    *   **ShiftRows:** A transposition step consisting of pure hardware routing (zero logic delay) that cyclically shifts the last three rows of the state array.
+    *   **MixColumns:** A mixing operation operating on the columns of the state, utilizing Galois Field `GF(2^8)` multiplication implemented via dedicated XOR trees.
+    *   **AddRoundKey:** The state is XORed with the specific round key generated for this stage.
+*   **Final Stage (Round 10):** 
+    *   Executes **SubBytes**, **ShiftRows**, and **AddRoundKey**. As per the AES FIPS-197 standard, the `MixColumns` step is bypassed in this final stage to complete the ciphertext generation.
+
+#### On-The-Fly Key Expansion
+To eliminate the massive memory overhead and latency of pre-computing 11 separate round keys, this architecture features **stage-by-stage dynamic key expansion**. The combinational logic required to generate the next round's key is embedded directly parallel to the data path. As a block of data moves from Stage *N* to Stage *N+1*, its corresponding round key is calculated simultaneously, enabling zero-latency dynamic key updates without ever stalling the pipeline.
+
 ## State Machine Overview
 
 ### Read FSM
